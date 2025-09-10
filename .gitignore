@@ -31,10 +31,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 
-# environment files (keep .env.example)
-.env
-.env.local
-.env.production
 
 # Development and documentation files
 CLAUDE.md
