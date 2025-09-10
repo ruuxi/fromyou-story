@@ -1,0 +1,151 @@
+:root {
+  /* Colors */
+  --fy-color-amber: #92400E;     /* Tailwind amber-800 base used for accents */
+  --fy-color-sky:   #0C4A6E;     /* Tailwind sky-900 */
+  --fy-color-purple:#581C87;     /* Tailwind purple-900 */
+
+  --fy-text-strong: rgba(255, 255, 255, 0.90);
+  --fy-text-muted:  rgba(255, 255, 255, 0.70);
+  --fy-text-dim:    rgba(255, 255, 255, 0.60);
+
+  /* Surfaces */
+  --fy-surface-glass: rgba(41, 37, 36, 0.20); /* warm neutral glass base */
+  --fy-surface-border: rgba(255, 255, 255, 0.15);
+  --fy-surface-border-subtle: rgba(255, 255, 255, 0.10);
+  --fy-surface-border-strong: rgba(255, 255, 255, 0.20);
+
+  /* Backdrop effects */
+  --fy-blur: 16px;         /* primary glass blur */
+  --fy-saturate: 120%;     /* primary glass saturate */
+  --fy-blur-strong: 20px;  /* dialogs/slide-ins */
+  --fy-saturate-strong: 180%;
+
+  /* Radii */
+  --fy-radius-collapsed: 28px; /* compact rounded containers */
+  --fy-radius-expanded:  20px; /* expanded state/active cards */
+  --fy-radius-button:    16px; /* pill-y buttons */
+
+  /* Shadows */
+  --fy-shadow-inner: 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+  --fy-shadow-card:  0 8px 32px rgba(0, 0, 0, 0.15);
+  --fy-shadow-card-strong: 0 20px 40px rgba(0, 0, 0, 0.30);
+  --fy-shadow-focus: 0 0 20px rgba(255, 255, 255, 0.05);
+
+  /* Motion */
+  --fy-ease-liquid: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --fy-dur-fast: 150ms;
+  --fy-dur: 300ms;
+  --fy-dur-slow: 600ms;
+
+  /* Decorative */
+  --fy-ring-thin: 1.5px;      /* shimmer border thickness */
+}
+
+@keyframes liquid-expand {
+  0%   { transform: scale(1) translateY(0); border-radius: var(--fy-radius-collapsed); }
+  100% { transform: scale(1) translateY(0); border-radius: var(--fy-radius-expanded); }
+}
+
+@keyframes content-reveal {
+  0%   { opacity: 0; transform: translateY(4px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes button-slide-up {
+  0%   { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  0%   { opacity: 0; transform: translateY(2px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Shimmer ring (one-shot accent) */
+@property --shimmer-angle { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+@keyframes shimmer-sweep { from { --shimmer-angle: 0deg; } to { --shimmer-angle: 360deg; } }
+.shimmer-border {
+  box-sizing: border-box;
+  padding: var(--fy-ring-thin);
+  background: conic-gradient(
+    from var(--shimmer-angle) at 50% 50%,
+    #fca5a5, #facc15, #34d399, #60a5fa, #a78bfa, #f472b6, #fca5a5
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+}
+
+/* Ambient focus glow */
+@keyframes gentle-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.05); }
+  50%      { box-shadow: 0 0 30px rgba(255, 255, 255, 0.08); }
+}
+
+/* Glass surfaces */
+.glass-unified {
+  background: var(--fy-surface-glass);
+  backdrop-filter: blur(var(--fy-blur)) saturate(var(--fy-saturate));
+  -webkit-backdrop-filter: blur(var(--fy-blur)) saturate(var(--fy-saturate));
+  border: 1px solid var(--fy-surface-border);
+  box-shadow: var(--fy-shadow-inner), var(--fy-shadow-card);
+  border-radius: var(--fy-radius-expanded);
+}
+
+.glass-unified.expanded {
+  animation: liquid-expand var(--fy-dur-slow) var(--fy-ease-liquid) forwards;
+  background:
+    linear-gradient(
+      to bottom right,
+      color-mix(in srgb, var(--fy-color-amber) 20%, transparent),
+      color-mix(in srgb, var(--fy-color-sky) 20%, transparent),
+      color-mix(in srgb, var(--fy-color-purple) 10%, transparent)
+    ),
+    rgba(0, 0, 0, 0.30);
+  border-color: rgba(255, 255, 255, 0.10);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.06) inset,
+    var(--fy-shadow-card-strong),
+    0 0 60px rgba(255, 255, 255, 0.03);
+}
+
+/* glass-secondary is defined in globals.css to avoid conflicts */
+
+/* Mode buttons */
+.mode-button {
+  background:
+    linear-gradient(to bottom right,
+      color-mix(in srgb, var(--fy-color-amber) 10%, transparent),
+      color-mix(in srgb, var(--fy-color-sky)   8%, transparent),
+      color-mix(in srgb, var(--fy-color-purple) 6%, transparent)
+    ),
+    rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--fy-text-muted);
+  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: var(--fy-radius-button);
+}
+.mode-button:hover:not(.active) {
+  background:
+    linear-gradient(to bottom right,
+      color-mix(in srgb, var(--fy-color-amber) 14%, transparent),
+      color-mix(in srgb, var(--fy-color-sky)  11%, transparent),
+      color-mix(in srgb, var(--fy-color-purple) 8%, transparent)
+    ),
+    rgba(0, 0, 0, 0.12);
+  border-color: rgba(255, 255, 255, 0.10);
+  color: rgba(255, 255, 255, 0.80);
+}
+.mode-button.active {
+  background:
+    linear-gradient(to bottom right,
+      color-mix(in srgb, var(--fy-color-amber) 20%, transparent),
+      color-mix(in srgb, var(--fy-color-sky)  15%, transparent),
+      color-mix(in srgb, var(--fy-color-purple) 10%, transparent)
+    ),
+    rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: var(--fy-text-strong);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08) inset, 0 2px 8px rgba(0, 0, 0, 0.20);
+}
+
+

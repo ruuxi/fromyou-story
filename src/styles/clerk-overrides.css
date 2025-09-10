@@ -1,0 +1,564 @@
+/* Clerk Glass Theme Overrides */
+
+/* Global overrides for all Clerk elements */
+[data-clerk-portal] {
+  --clerk-background: transparent !important;
+}
+
+/* Ensure backdrop filter support */
+.cl-rootBox {
+  isolation: isolate;
+  background: transparent !important;
+}
+
+/* Modal specific overrides for glass effect */
+.cl-modalContent {
+  background: transparent !important;
+}
+
+/* Dimmer modal backdrop */
+.cl-modalBackdrop {
+  background: rgba(0, 0, 0, 0.65) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+}
+
+/* Enhanced glass effect for cards with dimmer background */
+.cl-card,
+.cl-modalContent .cl-card {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.4) 0%,
+    rgba(0, 0, 0, 0.3) 100%
+  ) !important;
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 
+    0 8px 32px 0 rgba(0, 0, 0, 0.5),
+    0 2px 16px 0 rgba(0, 0, 0, 0.3),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Add subtle gradient overlay */
+.cl-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    600px circle at 50% 0%,
+    rgba(255, 255, 255, 0.03),
+    transparent 40%
+  );
+  pointer-events: none;
+}
+
+
+/* Mobile-only: account sidebar (left nav after tapping Account) — remove glass, use solid brand blue */
+@media (max-width: 768px) {
+  .cl-userProfile-root .cl-navbar {
+    background: #303247d9 !important;
+    margin-top: 7vh !important;
+    padding-inline: 1vh !important;
+    margin-inline-start: 1.5vh !important;
+    padding-top: 1vh !important;
+    max-height: 13vh !important;
+    max-width: 20vh !important;
+  }
+ }
+ 
+ 
+ /* Mobile-only: make the left nav (Profile/Security) drop down instead of slide-in */
+ @media (max-width: 768px) {
+  .cl-userProfile-root .cl-navbar,
+  .cl-accountManagement-root .cl-navbar,
+  .cl-accountSwitcher-root .cl-navbar,
+  .cl-organizationProfile-root .cl-navbar {
+    transform: none !important; /* cancel horizontal slide */
+    transition: none !important;
+  }
+ 
+ 
+  .cl-userProfile-root .cl-navbarMobileMenuRow,
+  .cl-accountManagement-root .cl-navbarMobileMenuRow,
+  .cl-accountSwitcher-root .cl-navbarMobileMenuRow,
+  .cl-organizationProfile-root .cl-navbarMobileMenuRow {
+    transform-origin: top center !important;
+    animation: accountLeftNavDrop 220ms cubic-bezier(0.2, 0.7, 0.3, 1) both !important;
+  }
+ }
+ 
+ 
+ @keyframes accountLeftNavDrop {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scaleY(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+  }
+ }
+ 
+
+/* Input field glass effect */
+.cl-formFieldInput {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.12),
+    rgba(255, 255, 255, 0.08)
+  ) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff !important;
+}
+
+.cl-formFieldInput:focus {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.15),
+    rgba(255, 255, 255, 0.1)
+  ) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  box-shadow: 
+    0 0 0 3px rgba(255, 255, 255, 0.25),
+    0 0 20px rgba(255, 255, 255, 0.3),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.15) !important;
+}
+
+.cl-formFieldInput::placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Button glass effects */
+.cl-formButtonPrimary {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.15)) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
+
+.cl-formButtonPrimary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.cl-formButtonPrimary:hover::before {
+  left: 100%;
+}
+
+.cl-formButtonPrimary:hover {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.25)) !important;
+  transform: translateY(-2px);
+  box-shadow: 
+    0 8px 20px rgba(255, 255, 255, 0.4),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Social buttons glass effect */
+.cl-socialButtonsBlockButton,
+.cl-socialButtonsIconButton {
+  background: rgba(255, 255, 255, 0.25) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  transition: all 0.2s ease !important;
+}
+
+.cl-socialButtonsBlockButton:hover,
+.cl-socialButtonsIconButton:hover {
+  background: rgba(255, 255, 255, 0.35) !important;
+  border-color: rgba(255, 255, 255, 0.45) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* More specific selectors to override Clerk appearance config */
+[data-clerk-portal] .cl-socialButtonsBlockButton,
+[data-clerk-portal] .cl-socialButtonsIconButton {
+  background: rgba(255, 255, 255, 0.25) !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+}
+
+[data-clerk-portal] .cl-socialButtonsBlockButton:hover,
+[data-clerk-portal] .cl-socialButtonsIconButton:hover {
+  background: rgba(255, 255, 255, 0.35) !important;
+  border-color: rgba(255, 255, 255, 0.45) !important;
+}
+
+/* Divider styling */
+.cl-dividerLine {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  ) !important;
+}
+
+/* User button glass effect - reduced transparency */
+.cl-userButtonPopoverCard {
+  background: rgba(28, 18, 16, 0.95) !important;
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  padding: 14px 12px !important;
+  box-shadow: 
+    0 8px 32px 0 rgba(0, 0, 0, 0.5),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.2) !important;
+}
+
+/* User dropdown font/color: bright white, bold, GeistSans */
+.cl-userButtonPopoverCard,
+.cl-userButtonPopoverCard * {
+  color: #ffffff !important;
+  font-weight: 400 !important;
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, sans-serif !important;
+}
+
+/* Remove left-side icons/emoji in each menu item and tighten spacing */
+.cl-userButtonPopoverCard .cl-menuItem > :first-child,
+.cl-userButtonPopoverCard .cl-userButtonPopoverActionButton > :first-child,
+.cl-userButtonPopoverCard .cl-menuItem > span:first-child,
+.cl-userButtonPopoverCard .cl-userButtonPopoverActionButton > span:first-child,
+.cl-userButtonPopoverCard .cl-menuItem svg,
+.cl-userButtonPopoverCard .cl-userButtonPopoverActionButton svg,
+.cl-userButtonPopoverCard .cl-menuItem img,
+.cl-userButtonPopoverCard .cl-userButtonPopoverActionButton img,
+.cl-userButtonPopoverCard .cl-menuItem [role="img"],
+.cl-userButtonPopoverCard .cl-userButtonPopoverActionButton [role="img"],
+/* Account switcher + related menu lists */
+.cl-accountSwitcherItem > :first-child,
+.cl-accountSwitcherItem > span:first-child,
+.cl-accountSwitcherItem svg,
+.cl-accountSwitcherItem img,
+.cl-accountSwitcherItem [role="img"] {
+  display: none !important;
+}
+
+.cl-userButtonPopoverCard .cl-menuItem,
+.cl-userButtonPopoverCard .cl-userButtonPopoverActionButton,
+.cl-accountSwitcherItem {
+  gap: 0 !important;
+  padding-left: 20px !important; /* consistent left padding for all menu items */
+  grid-template-columns: unset !important; /* remove icon column if any */
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Extra safety: remove any icon-like elements and pseudo-elements */
+.cl-userButtonPopoverCard .cl-menuItem::before,
+.cl-userButtonPopoverCard .cl-menuItem::after,
+.cl-userButtonPopoverCard .cl-userButtonPopoverActionButton::before,
+.cl-userButtonPopoverCard .cl-userButtonPopoverActionButton::after,
+.cl-accountSwitcherItem::before,
+.cl-accountSwitcherItem::after {
+  display: none !important;
+  content: none !important;
+}
+
+.cl-userButtonPopoverCard [class*="Icon"],
+.cl-userButtonPopoverCard [class*="icon"],
+.cl-userButtonPopoverCard [class*="cl-icon"],
+.cl-userButtonPopoverCard [data-icon],
+.cl-userButtonPopoverCard [aria-hidden="true"],
+.cl-accountSwitcherItem [class*="Icon"],
+.cl-accountSwitcherItem [class*="icon"],
+.cl-accountSwitcherItem [class*="cl-icon"],
+.cl-accountSwitcherItem [data-icon],
+.cl-accountSwitcherItem [aria-hidden="true"] {
+  display: none !important;
+}
+
+/* Capitalize "Manage Account" menu item */
+.cl-userButtonPopoverCard .cl-userButtonPopoverActionButton__manageAccount {
+  text-transform: capitalize !important;
+}
+
+/* Menu items hover effect */
+.cl-menuItem:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Loading spinner enhancement */
+.cl-spinner {
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
+}
+
+/* Form field focus animations */
+.cl-formFieldInput,
+.cl-formButtonPrimary,
+.cl-socialButtonsBlockButton {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Error and success states with glass effect */
+.cl-formFieldErrorText {
+  background: rgba(239, 68, 68, 0.1);
+  padding: 4px 8px;
+  border-radius: 4px;
+  backdrop-filter: blur(8px);
+}
+
+.cl-formFieldSuccessText {
+  background: rgba(16, 185, 129, 0.1);
+  padding: 4px 8px;
+  border-radius: 4px;
+  backdrop-filter: blur(8px);
+}
+
+/* Ensure text remains visible */
+.cl-card * {
+  color: #ffffff !important;
+}
+
+/* Force glass background on all internal card elements */
+.cl-card > div {
+  background: transparent !important;
+}
+
+/* Internal form container glass effect */
+.cl-cardBox,
+.cl-formContainer {
+  background: transparent !important;
+}
+
+/* Header styling with glass */
+.cl-headerTitle,
+.cl-headerSubtitle {
+  color: #ffffff !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Make all text white for visibility */
+.cl-formFieldLabel,
+.cl-formFieldAction,
+.cl-footerActionText,
+.cl-footerActionLink,
+.cl-dividerText,
+.cl-formHeaderTitle,
+.cl-formHeaderSubtitle,
+.cl-socialButtonsBlockButtonText {
+  color: #ffffff !important;
+}
+
+/* Ensure proper layering */
+.cl-modalContent {
+  position: relative;
+  z-index: 50;
+}
+
+/* User profile and settings pages - reduced transparency */
+.cl-userProfile-root,
+.cl-organizationProfile-root,
+.cl-accountSwitcher-root,
+.cl-accountManagement-root {
+  background: rgba(28, 18, 16, 0.85) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+}
+
+.cl-profilePage-root,
+.cl-profileSection__account,
+.cl-profileSection__profile,
+.cl-profileSection__security,
+.cl-accountSwitcherContent,
+.cl-accountManagementContent {
+  background: rgba(28, 18, 16, 0.8) !important;
+}
+
+/* Navigation items in profile/settings */
+.cl-navbar,
+.cl-navbarMobileMenuRow {
+  background: rgba(28, 18, 16, 0.7) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+}
+
+.cl-navbarButton,
+.cl-navbarMobileMenuButton {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.cl-navbarButton:hover,
+.cl-navbarMobileMenuButton:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Override glass for profile/settings/account cards */
+.cl-userProfile-root .cl-card,
+.cl-organizationProfile-root .cl-card,
+.cl-accountSwitcher-root .cl-card,
+.cl-accountManagement-root .cl-card {
+  background: rgba(28, 18, 16, 0.85) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Account switcher specific elements */
+.cl-accountSwitcherTrigger,
+.cl-accountSwitcherItem {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.cl-accountSwitcherTrigger:hover,
+.cl-accountSwitcherItem:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Subtle animation for card entrance */
+.cl-card {
+  animation: glassCardEntrance 0.3s ease-out;
+}
+
+@keyframes glassCardEntrance {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Fix for any potential backdrop-filter issues in Safari */
+@supports (-webkit-backdrop-filter: blur(20px)) {
+  .cl-card,
+  .cl-userButtonPopoverCard {
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+  }
+}
+
+/* Checkbox specific overrides for better visibility */
+.cl-formFieldCheckboxInput {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border: 2px solid rgba(255, 255, 255, 0.6) !important;
+  border-radius: 4px !important;
+  width: 18px !important;
+  height: 18px !important;
+  cursor: pointer !important;
+  position: relative !important;
+}
+
+.cl-formFieldCheckboxInput:checked {
+  background: #0ea5e9 !important;
+  border-color: #0ea5e9 !important;
+}
+
+.cl-formFieldCheckboxInput:checked::after {
+  content: '✓' !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  color: white !important;
+  font-size: 12px !important;
+  font-weight: bold !important;
+}
+
+.cl-formFieldCheckboxInput:hover {
+  border-color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Ensure checkbox label is clickable */
+.cl-formFieldCheckbox label {
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+/* Override any solid backgrounds */
+.cl-card,
+.cl-cardBox,
+.cl-formContainer,
+.cl-main,
+.cl-content,
+.cl-modalContent > div,
+.cl-rootBox > div {
+  background-color: transparent !important;
+}
+
+/* Reapply glass to the actual card - keep for sign in/up modals with dimmer background */
+.cl-signIn-root .cl-card,
+.cl-signUp-root .cl-card {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.4) 0%,
+    rgba(0, 0, 0, 0.35) 50%,
+    rgba(0, 0, 0, 0.3) 100%
+  ) !important;
+  backdrop-filter: blur(20px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Override theme background colors */
+.cl-internal-17jn2g5,
+.cl-internal-1dauvpb,
+.cl-internal-92p12i,
+.cl-internal-2ds2im,
+[class*="cl-internal"] {
+  background: transparent !important;
+}
+
+/* Footer styling with matching glass background */
+.cl-footer {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(176, 15, 15, 0) 100%
+  ) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+  padding: 12px !important;
+  margin-top: 16px !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+}
+
+.cl-footerPages,
+.cl-footerAction,
+.cl-footerActionText,
+.cl-footerActionLink {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Secured by Clerk specific styling - smaller text and lower opacity */
+.cl-footerPages a,
+.cl-footer a {
+  color: rgba(255, 255, 255, 0.5) !important;
+  text-decoration: none !important;
+  font-size: 11px !important;
+}
+
+.cl-footerPages a:hover,
+.cl-footer a:hover {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Additional footer elements */
+.cl-footerText {
+  color: rgba(255, 255, 255, 0.6) !important;
+}

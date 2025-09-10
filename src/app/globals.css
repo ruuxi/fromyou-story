@@ -1,0 +1,1038 @@
+/* Import Clerk glass theme overrides */
+@import '../styles/clerk-overrides.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Animations */
+/* Lifted fade-in (with slight upward motion) */
+@keyframes fadeInLift {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes wordFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeInLift 1.2s ease-out forwards;
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.word-fade-in {
+  opacity: 0;
+  transform: translateX(10px);
+  animation: wordFadeIn 800ms ease forwards;
+}
+
+/* View Transitions API */
+@supports (view-transition-name: root) {
+  ::view-transition-old(root) {
+    animation: fadeOut 300ms ease-out forwards;
+  }
+
+  ::view-transition-new(root) {
+    animation: fadeIn 300ms ease-out forwards;
+  }
+
+  ::view-transition-group(root) {
+    animation-duration: 300ms;
+  }
+}
+
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Custom scrollbar styles */
+.custom-scrollbar {
+  scrollbar-width: none;
+  scrollbar-color: rgba(254, 252, 232, 0.4) rgba(254, 252, 232, 0.1);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(254, 252, 232, 0.1);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(254, 252, 232, 0.4);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(254, 252, 232, 0.6);
+}
+
+/* Minimal, neutral "simple" scrollbar utility */
+.simple-scrollbar {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: rgba(255, 255, 255, 0.35) transparent; /* Firefox */
+}
+
+.simple-scrollbar::-webkit-scrollbar {
+  width: 6px; /* Chrome/Safari */
+  height: 6px;
+}
+
+.simple-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.simple-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.35);
+  border-radius: 9999px;
+}
+
+.simple-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Ensure full height and dark background */
+html, body {
+  height: 100%;
+  background-color: #1c1210; /* Warm dark background to prevent white flash */
+}
+
+removal on/* Hide underlying app chrome until landing completes */
+body[data-landing="true"] {
+  /* Prevent any flash of underlying UI beneath the overlay */
+  overflow: hidden;
+}
+
+/* When landing is active, hide only the app header chrome to prevent flash */
+/* Hide top navigation + related chrome when landing overlay is active */
+body[data-landing="true"] [data-app-header="true"],
+body[data-landing="true"] [data-app-chrome="true"] {
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+/* Line clamp utilities */
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+/* Also hide the story feed content while landing is active */
+body[data-landing="true"] [data-app-feed="true"] {
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+/* Hide main content area initially when landing is active */
+body[data-landing="true"] .fixed.inset-0.z-20 {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 300ms ease-out, visibility 0s linear 300ms;
+}
+
+/* Show content when landing is removed */
+body:not([data-landing]) .fixed.inset-0.z-20 {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 300ms ease-out;
+}
+
+
+
+/* Ensure overlay wrapper remains interactive above */
+#landing-overlay {
+  pointer-events: auto;
+}
+
+/* Glass Design System */
+@layer components {
+  .glass-primary {
+    @apply bg-gradient-to-br from-amber-100/10 to-amber-50/5 backdrop-blur-xl border border-amber-100/20;
+  }
+  
+  .glass-secondary {
+    @apply bg-amber-50/5 backdrop-blur-md border border-amber-100/10;
+  }
+  
+  /* Subtle amber → purple gradient while maintaining glass feel */
+  .glass-secondary-gradient {
+    /* Stronger gradient, still translucent */
+    @apply bg-gradient-to-br from-amber-900/20  via-sky-900/15 to-purple-900/10 backdrop-blur-md border border-amber-100/10;
+    /* Soft internal glow to enhance depth without losing glass look */
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), inset 0 0 40px rgba(167, 139, 250, 0.06);
+  }
+  
+  .glass-accent {
+    @apply bg-gradient-to-r from-amber-400/10 to-rose-400/10 backdrop-blur-sm border border-amber-100/15;
+  }
+  
+  .glass-glow {
+    box-shadow: 0 0 30px rgba(254, 252, 232, 0.1),
+                0 0 60px rgba(245, 158, 11, 0.05),
+                inset 0 0 20px rgba(254, 252, 232, 0.05);
+  }
+  
+  .glass-shimmer {
+    @apply relative overflow-hidden;
+  }
+  
+  .glass-shimmer::after {
+    @apply absolute inset-0 -translate-x-full;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(254, 252, 232, 0.08) 50%,
+      transparent 100%
+    );
+    transition: transform 0.7s ease-out;
+    content: '';
+  }
+  
+  .glass-shimmer:hover::after {
+    @apply translate-x-full;
+  }
+  
+  .glass-depth {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
+                0 4px 16px rgba(0, 0, 0, 0.05),
+                inset 0 2px 4px rgba(254, 252, 232, 0.1);
+  }
+
+  /* Unified mode button styling (used across search + settings) */
+  .mode-button {
+    background: linear-gradient(
+        to bottom right,
+        rgba(255, 255, 255, 0.04),
+        rgba(255, 255, 255, 0.03),
+        rgba(255, 255, 255, 0.02)
+      ),
+      rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 1);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .mode-button:hover:not(.active) {
+    background: linear-gradient(
+        to bottom right,
+        rgba(255, 255, 255, 0.06),
+        rgba(255, 255, 255, 0.05),
+        rgba(255, 255, 255, 0.04)
+      ),
+      rgba(0, 0, 0, 0.04);
+    border-color: rgba(255, 255, 255, 0.16);
+    color: rgba(255, 255, 255, 1);
+  }
+  .mode-button.active {
+    background: linear-gradient(
+        to bottom right,
+        rgba(255, 255, 255, 0.10),
+        rgba(255, 255, 255, 0.08),
+        rgba(255, 255, 255, 0.06)
+      ),
+      rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 1);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+      0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Static variant for settings: no hover change, hover style as default */
+  .mode-button-static {
+    background: linear-gradient(
+        to bottom right,
+        rgba(255, 255, 255, 0.06),
+        rgba(255, 255, 255, 0.05),
+        rgba(255, 255, 255, 0.04)
+      ),
+      rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: rgba(255, 255, 255, 1);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+    transition: none;
+  }
+  .mode-button-static:hover {
+    background: linear-gradient(
+        to bottom right,
+        rgba(255, 255, 255, 0.06),
+        rgba(255, 255, 255, 0.05),
+        rgba(255, 255, 255, 0.04)
+      ),
+      rgba(0, 0, 0, 0.04);
+    border-color: rgba(255, 255, 255, 0.14);
+    color: rgba(255, 255, 255, 1);
+  }
+  .mode-button-static.active {
+    background: linear-gradient(
+        to bottom right,
+        rgba(255, 255, 255, 0.10),
+        rgba(255, 255, 255, 0.08),
+        rgba(255, 255, 255, 0.06)
+      ),
+      rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 1);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+      0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Enhanced Animations */
+.animate-fadeOut {
+  animation: fadeOut 0.3s ease-out forwards;
+}
+
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.fade-out {
+  opacity: 1;
+  animation: fadeOut 0.3s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.7s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes letterReveal {
+  from {
+    opacity: 0;
+    transform: translateY(10px) rotateX(-90deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotateX(0);
+  }
+}
+
+@keyframes floatParticle {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(-100vh) translateX(50px);
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.animate-float-particle {
+  animation: floatParticle 10s ease-in-out infinite;
+}
+
+.animate-glow-pulse {
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+.animate-letter-reveal {
+  animation: letterReveal 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-shimmer {
+  animation: shimmer 8s linear infinite;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(254, 252, 232, 0.1) 50%,
+    transparent 100%
+  );
+  background-size: 1000px 100%;
+}
+
+/* Spring Physics Transitions */
+.transition-spring {
+  transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Custom transition durations */
+.duration-600 {
+  transition-duration: 600ms;
+}
+
+.duration-700 {
+  transition-duration: 700ms;
+}
+
+/* Smooth easing curves for mobile chrome animations */
+.ease-mobile-hide {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+.ease-mobile-show {
+  transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Magnetic Hover Effect */
+.magnetic-hover {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.magnetic-hover:hover {
+  transform: scale(1.05) translateZ(0);
+}
+
+/* 3D Perspective */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+/* Focus Styles for Accessibility */
+@layer utilities {
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-100/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent;
+  }
+  
+  button, a, input, select, textarea {
+    @apply focus-ring;
+  }
+
+  /* Hide scrollbar utility (cross-browser) */
+  .no-scrollbar {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
+  }
+
+  /* Enable smooth momentum scrolling on iOS for horizontal lists */
+  .horizontal-scroll-touch {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    overscroll-behavior-y: none;
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Hide scrollbar for story container */
+.story-scroll-container {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  contain: layout style paint;
+  -webkit-overflow-scrolling: touch;
+}
+
+.story-scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Performance optimizations for backdrop blur */
+.will-change-backdrop {
+  will-change: backdrop-filter;
+}
+
+.transform-gpu {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  perspective: 1000px;
+  -webkit-perspective: 1000px;
+}
+
+/* Optimize story containers */
+.story-container {
+  contain: layout style paint;
+  content-visibility: auto;
+  contain-intrinsic-size: 0 100vh;
+}
+
+/* Performance Optimizations */
+@layer utilities {
+  .gpu-accelerated {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  .will-change-glass {
+    will-change: backdrop-filter, transform;
+  }
+  
+  .contain-strict {
+    contain: strict;
+  }
+  
+  .contain-layout {
+    contain: layout;
+  }
+}
+
+/* Optimize glass effects on mobile */
+@media (max-width: 768px) {
+  .glass-primary {
+    @apply bg-amber-100/10 backdrop-blur-md;
+  }
+  
+  .glass-secondary {
+    @apply bg-amber-50/5 backdrop-blur;
+  }
+  
+  .glass-glow {
+    box-shadow: 0 0 20px rgba(254, 252, 232, 0.08);
+  }
+
+  /* Legal document mobile spacing tweaks */
+  .legal-document {
+    /* Reduce default top margin inside legal content */
+  }
+
+  .legal-document > *:first-child {
+    margin-top: 0.25rem !important;
+  }
+
+  /* Reduce header/sub-header typography on mobile */
+  /* Mobile heading overrides (force override prose defaults) */
+  .legal-document .legal-header h1,
+  .legal-document h1,
+  .prose.legal-document h1,
+  .prose .legal-header h1 {
+    font-size: 1.125rem !important; /* ~text-lg */
+    line-height: 1.2 !important;
+  }
+  .legal-document .legal-header .legal-entity {
+    font-size: 0.9rem !important;
+  }
+  .legal-document .legal-header .last-updated {
+    font-size: 0.8rem !important;
+  }
+
+  .legal-document h2,
+  .prose.legal-document h2 {
+    font-size: 1rem !important; /* ~text-base */
+    line-height: 1.35 !important;
+  }
+  .legal-document h3,
+  .prose.legal-document h3 {
+    font-size: 0.9375rem !important; /* ~text-sm+ */
+    line-height: 1.45 !important;
+  }
+
+  .legal-document h1 {
+    margin-bottom: 0.75rem !important;
+  }
+
+  .legal-document h2 {
+    margin-top: 1.25rem !important;
+    margin-bottom: 0.75rem !important;
+    padding-bottom: 0.375rem !important;
+  }
+
+  .legal-document h3 {
+    margin-top: 0.75rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  .legal-document p,
+  .legal-document ul,
+  .legal-document ol {
+    margin-bottom: 0.5rem !important;
+  }
+}
+
+/* Story page styling for better reading experience */
+.story-paragraph:not(:last-child) {
+  opacity: 0.75;
+  transition: opacity 0.3s ease;
+}
+
+.story-paragraph:hover {
+  opacity: 1;
+}
+
+/* View Transitions API support - merged above */
+
+/* Fallback fade animations for browsers without View Transitions API */
+.fade-enter {
+  opacity: 0;
+}
+
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity 300ms ease-out;
+}
+
+.fade-exit {
+  opacity: 1;
+}
+
+.fade-exit-active {
+  opacity: 0;
+  transition: opacity 300ms ease-out;
+}
+
+/* Soft fade animations */
+@keyframes fade-out-soft {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in-soft {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-out-soft {
+  animation: fade-out-soft 300ms ease-out forwards;
+}
+
+.animate-fade-in-soft {
+  animation: fade-in-soft 300ms ease-out forwards;
+}
+
+/* Apple-style Search Overlay Animations */
+:root {
+  /* Custom easing curves */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+  
+  /* Coordinated timing */
+  --duration-expand: 900ms;
+  --duration-collapse: 340ms;
+  --duration-content-reveal: 500ms;
+  --stagger-delay: 40ms;
+}
+
+/* Overlay expand animation */
+@keyframes overlay-expand {
+  0% {
+    opacity: 0;
+    transform: scaleY(0.7) scaleX(0.95) translateY(20px);
+    backdrop-filter: blur(0px);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0);
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: scaleY(1) scaleX(1) translateY(0);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 -4px 40px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* Overlay collapse animation */
+@keyframes overlay-collapse {
+  0% {
+    opacity: 1;
+    transform: scaleY(1) scaleX(1) translateY(0);
+    box-shadow: 0 -4px 40px rgba(0, 0, 0, 0.2);
+  }
+  40% {
+    opacity: 1; /* Stay visible while content fades */
+  }
+  100% {
+    opacity: 0;
+    transform: scaleY(0.7) scaleX(0.95) translateY(20px);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0);
+  }
+}
+
+/* Content reveal with drift */
+@keyframes content-reveal {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Content hide - faster for snappy close */
+@keyframes content-hide {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+/* Search input pulse for spatial connection */
+@keyframes search-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+/* Icon morph animation */
+@keyframes icon-morph {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(0.9) rotate(180deg);
+  }
+  100% {
+    transform: scale(1) rotate(360deg);
+  }
+}
+
+/* Animation classes */
+.animate-overlay-expand {
+  animation: overlay-expand var(--duration-expand) var(--ease-out-expo) forwards;
+  transform-origin: center bottom;
+}
+
+.animate-overlay-collapse {
+  animation: overlay-collapse var(--duration-collapse) var(--ease-in-out-quart) forwards;
+  transform-origin: center bottom;
+}
+
+.animate-content-reveal {
+  animation: content-reveal var(--duration-content-reveal) var(--ease-out-quart) forwards;
+}
+
+.animate-content-hide {
+  animation: content-hide 120ms var(--ease-in-out-quart) forwards;
+}
+
+.animate-search-pulse {
+  animation: search-pulse 600ms var(--ease-spring);
+}
+
+.animate-icon-morph {
+  animation: icon-morph 400ms var(--ease-spring);
+}
+
+
+
+/* Optimized character animations */
+@keyframes character-fade-in {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 4px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.animate-character-in {
+  animation: character-fade-in 600ms var(--ease-out-quart) both;
+}
+
+/* Stagger delays for content items */
+.stagger-1 {
+  animation-delay: var(--stagger-delay);
+}
+
+.stagger-2 {
+  animation-delay: calc(var(--stagger-delay) * 2);
+}
+
+.stagger-3 {
+  animation-delay: calc(var(--stagger-delay) * 3);
+}
+
+/* Fast fade animations for mode transitions */
+.animate-fade-out-fast {
+  animation: fade-out-soft 150ms ease-out forwards;
+}
+
+.animate-fade-in-fast {
+  animation: fade-in-soft 150ms ease-out forwards;
+}
+
+/* Text reveal animation - left to right wipe */
+@keyframes reveal-wipe {
+  0% {
+    background-position: 100% 0;      /* fully hidden (transparent half aligned over text) */
+  }
+  100% {
+    background-position: 0% 0;        /* wipe left-to-right to reveal */
+  }
+}
+
+.reveal-text {
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  line-height: 1.1;                     /* Ensure proper line height for clipping */
+  padding-bottom: 0.1em;                /* Add small padding to prevent clipping */
+
+  /* Opaque on the left, gradual transition to transparent on the right */
+  background-image: linear-gradient(
+    to right,
+    rgba(255,255,255,1) 0%,
+    rgba(255,255,255,1) 30%,
+    rgba(255,255,255,0) 50%,
+    rgba(255,255,255,0) 100%
+  );
+
+  background-size: 300% 100%;
+  background-position: 100% 0;          /* start with the transparent half covering the text */
+  animation: reveal-wipe 2.8s ease forwards;
+}
+
+/* Staggered animation utilities */
+[style*="animation-delay"] {
+  animation-fill-mode: both;
+}
+
+/* Legal Document Styling */
+.legal-document {
+  @apply text-gray-200 leading-relaxed;
+}
+
+.legal-document .legal-header {
+  @apply text-center mb-3 pb-8 border-b border-amber-100/20;
+}
+
+/* Remove vertical gap between Effective Date and Last Updated within legal header */
+.legal-document .legal-header .last-updated {
+  margin-bottom: 0 !important;
+}
+.legal-document .legal-header .last-updated + .last-updated {
+  margin-top: 0.125rem !important; /* minimal spacing between the two lines */
+}
+
+.legal-document .legal-header h1 {
+  @apply text-4xl font-bold text-amber-100 mb-4;
+}
+
+.legal-document .legal-entity {
+  @apply text-xl text-gray-300 mb-2;
+}
+
+.legal-document .last-updated {
+  @apply text-gray-400 text-sm;
+}
+
+.legal-document h2 {
+  @apply text-2xl font-bold text-amber-100 mt-12 mb-6 border-b border-amber-100/20 pb-3;
+}
+
+.legal-document h3 {
+  @apply text-xl font-semibold text-amber-50 mt-8 mb-4;
+}
+
+.legal-document p {
+  @apply mb-4 text-gray-200;
+}
+
+.legal-document ul {
+  @apply mb-4 pl-6 space-y-2;
+}
+
+.legal-document li {
+  @apply text-gray-200 relative;
+}
+
+.legal-document li::before {
+  @apply absolute -left-6 top-0 text-amber-400;
+  content: "•";
+}
+
+.legal-document strong {
+  @apply text-amber-100 font-semibold;
+}
+
+.legal-document .registered-agent {
+  @apply bg-amber-100/5 border border-amber-100/20 rounded-lg p-4 my-6;
+}
+
+.legal-document .dmca-agent {
+  @apply bg-amber-100/5 border border-amber-100/20 rounded-lg p-4 my-6;
+}
+
+.legal-document .contact-info {
+  @apply bg-amber-100/5 border border-amber-100/20 rounded-lg p-6 my-6;
+}
+
+.legal-document .acknowledgment {
+  @apply bg-gradient-to-r from-amber-100/10 to-rose-100/10 border border-amber-100/30 rounded-lg p-6 mt-12 text-center;
+}
+
+.legal-document .acknowledgment p {
+  @apply text-amber-50 font-semibold text-lg mb-0;
+}
+
+/* Shiny sweep animation for CTA buttons */
+@keyframes shine-sweep {
+  0% {
+    transform: translateX(-150%) skewX(-20deg);
+  }
+  100% {
+    transform: translateX(150%) skewX(-20deg);
+  }
+}
+
+.button-shiny {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate; /* ensure pseudo-element layers correctly */
+}
+
+.button-shiny::after {
+  content: '';
+  position: absolute;
+  top: -30%;
+  left: -20%;
+  width: 60%;
+  height: 160%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.08) 40%,
+    rgba(255, 255, 255, 0.32) 50%,
+    rgba(255, 255, 255, 0.08) 60%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: shine-sweep 2.6s ease-in-out infinite;
+  pointer-events: none;
+  will-change: transform;
+  z-index: 1;
+}

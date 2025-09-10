@@ -1,0 +1,16 @@
+.env merge=ours
+
+# Always keep our local version for these files during merges
+.gitignore merge=ours
+.gitattributes merge=ours
+
+# Environment files
+.env merge=ours
+*.env merge=ours
+
+# Custom attribute files (if present)
+.attribute merge=ours
+*.attribute merge=ours
+
+# Documentation should not be auto-merged from others
+*.md merge=ours
