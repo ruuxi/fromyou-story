@@ -1,4 +1,4 @@
-# From You - AI Story Creator
+# FromYou - AI Story Creator
 
 > **The ultimate open-source AI story and character generation platform with full SillyTavern compatibility**
 

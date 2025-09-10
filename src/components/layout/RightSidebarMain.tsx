@@ -640,7 +640,7 @@ export function RightSidebarMain() {
           <>
             {/* User Profile Section */}
             <div className="flex-shrink-0 p-4 border-b border-white/10">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 mb-3">
                 <div className="w-8 h-8 bg-gradient-to-br from-purple-500/20 to-blue-500/20 border border-white/20 flex items-center justify-center">
                   <User className="w-4 h-4 text-white/80" />
                 </div>
@@ -689,6 +689,26 @@ export function RightSidebarMain() {
                 </div>
               </div>
 
+              {/* Model Override Input */}
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-gradient-to-br from-green-500/20 to-blue-500/20 border border-white/20 flex items-center justify-center">
+                  <Settings className="w-4 h-4 text-white/80" />
+                </div>
+                <div className="flex items-center gap-2 flex-1">
+                  <span className="text-white/60 text-sm">Model:</span>
+                  <input
+                    type="text"
+                    placeholder="provider/model (e.g. openai/gpt-4)"
+                    value={modelOverride}
+                    onChange={(e) => {
+                      const value = e.target.value
+                      setModelOverride(value)
+                      debouncedUpdateModel(value)
+                    }}
+                    className="bg-transparent border border-white/20 px-2 py-1 text-white text-sm flex-1 focus:outline-none focus:border-white/40 placeholder-white/40"
+                  />
+                </div>
+              </div>
             </div>
 
             {/* Library Header */}
