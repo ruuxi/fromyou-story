@@ -31,14 +31,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 
-
-# Development and documentation files
-CLAUDE.md
-ai_sdk_v5_search_guide.md
-changelog.md
-ai\ sdk\ v5/
-docs/
-
 # IDE/Editor specific
 .claude/
 .cursor/
@@ -48,6 +40,5 @@ docs/
 # OS specific
 .DS_Store
 Thumbs.db
-*.md
 # clerk configuration (can include secrets)
 /.clerk/
