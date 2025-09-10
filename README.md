@@ -79,7 +79,7 @@ From You is a comprehensive AI-powered storytelling platform that enables users 
 1. **Clone the repository**
    ```bash
    git clone https://github.com/ruuxi/fromyou-story.git
-   cd fromyou2-public
+   cd fromyou-story
    ```
 
 2. **Install dependencies**
@@ -160,7 +160,7 @@ From You is a comprehensive AI-powered storytelling platform that enables users 
 ## 📁 Project Structure
 
 ```
-fromyou2-public/
+fromyou-story/
 ├── convex/                 # Convex backend
 │   ├── actions/           # Server actions
 │   ├── ai/               # AI integration logic
