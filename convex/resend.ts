@@ -43,7 +43,7 @@ const emailTemplates = {
           </ul>
           
           <div style="text-align: center; margin: 40px 0;">
-            <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://fromyou.ai'}" 
+            <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'https://fromyou.ai'}" 
                style="background: linear-gradient(to right, #FCD34D, #F87171); 
                       color: #1C1210; 
                       padding: 16px 32px; 
@@ -96,7 +96,7 @@ const emailTemplates = {
           </div>
           
           <div style="text-align: center; margin: 40px 0;">
-            <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://fromyou.ai'}/subscription" 
+            <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'https://fromyou.ai'}/subscription" 
                style="background: linear-gradient(to right, #FCD34D, #F87171); 
                       color: #1C1210; 
                       padding: 16px 32px; 
@@ -148,7 +148,7 @@ const emailTemplates = {
           </p>
           
           <div style="text-align: center; margin: 40px 0;">
-            <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://fromyou.ai'}" 
+            <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'https://fromyou.ai'}" 
                style="background: #E5E7EB; 
                       color: #374151; 
                       padding: 16px 32px; 

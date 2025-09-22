@@ -72,6 +72,88 @@ export function ImportCard({ item, showAuthor = true, onSelect, compact = false 
     }
   }
 
+  const handleDownload = async (e: React.MouseEvent) => {
+    e.stopPropagation()
+    try {
+      const safeName = (item.name || 'export').replace(/[^a-z0-9\-_. ]/gi, '_')
+      const downloadBlob = (blob: Blob, filename: string) => {
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = filename
+        document.body.appendChild(a)
+        a.click()
+        a.remove()
+        URL.revokeObjectURL(url)
+      }
+      const downloadJson = (obj: any, filename: string) => {
+        const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' })
+        downloadBlob(blob, filename.endsWith('.json') ? filename : `${filename}.json`)
+      }
+
+      // Presets: attempt to fetch via dataUrl if present on feed items in future; fallback originalData
+      if (item.itemType === 'preset') {
+        if (item.dataUrl) {
+          const res = await fetch(item.dataUrl)
+          const blob = await res.blob()
+          downloadBlob(blob, `${safeName}.json`)
+          return
+        }
+        if (item.originalData) {
+          downloadJson(item.originalData, `${safeName}.json`)
+          return
+        }
+      }
+
+      if (item.itemType === 'character') {
+        if (item.originalData) {
+          downloadJson(item.originalData, `${safeName}.json`)
+          return
+        }
+        const card = {
+          spec: item.spec || 'chara_card_v2',
+          spec_version: item.specVersion || '2.0',
+          data: {
+            name: item.name,
+            description: item.description || '',
+            personality: item.personality || '',
+            scenario: item.scenario || '',
+            first_mes: item.firstMessage || '',
+            mes_example: item.messageExample || '',
+            creator_notes: item.creatorNotes || '',
+            system_prompt: item.systemPrompt || '',
+            post_history_instructions: item.postHistoryInstructions || '',
+            tags: item.tags || [],
+            character_book: item.characterBook || undefined,
+          }
+        }
+        downloadJson(card, `${safeName}.json`)
+        return
+      }
+
+      if (item.itemType === 'lorebook') {
+        if (item.originalData) {
+          downloadJson(item.originalData, `${safeName}.json`)
+          return
+        }
+        const lore = {
+          name: item.name,
+          entries: item.entries || {},
+          settings: item.settings || {},
+          format: item.format || 'sillytavern',
+        }
+        downloadJson(lore, `${safeName}.json`)
+        return
+      }
+
+      // Fallback
+      alert('No exportable data found for this item.')
+    } catch (err) {
+      console.error('Download failed:', err)
+      alert('Failed to download. Please try again.')
+    }
+  }
+
   const getItemIcon = () => {
     switch (item.itemType) {
       case 'preset':
@@ -163,6 +245,13 @@ export function ImportCard({ item, showAuthor = true, onSelect, compact = false 
             >
               <Share2 className="w-3 h-3" />
               Share
+            </button>
+            <button
+              onClick={handleDownload}
+              className="w-full px-3 py-2 text-left text-white/80 hover:bg-white/10 flex items-center gap-2 text-sm"
+            >
+              <Download className="w-3 h-3" />
+              Download
             </button>
             <button
               onClick={(e) => {

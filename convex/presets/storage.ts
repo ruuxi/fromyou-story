@@ -1,8 +1,46 @@
-import { mutation, query } from "../_generated/server"
+import { action, mutation, query } from "../_generated/server"
+import { makeFunctionReference } from "convex/server"
 import { v } from "convex/values"
-import { parsePreset, extractPresetName } from './parser'
 import { validatePreset } from './validators'
+import { detectPresetType, extractPresetName } from './parser'
 import { Id } from "../_generated/dataModel"
+
+type PresetType =
+  | "openai"
+  | "textgen"
+  | "kobold"
+  | "novelai"
+  | "instruct"
+  | "context"
+  | "sysprompt"
+  | "reasoning"
+
+const presetTypeValidator = v.union(
+  v.literal("openai"),
+  v.literal("textgen"),
+  v.literal("kobold"),
+  v.literal("novelai"),
+  v.literal("instruct"),
+  v.literal("context"),
+  v.literal("sysprompt"),
+  v.literal("reasoning")
+)
+
+const storePresetMutation = makeFunctionReference<
+  "mutation",
+  {
+    userId?: string
+    sessionId?: string
+    storageId: Id<"_storage">
+    presetType: PresetType
+    name: string
+  },
+  {
+    id: Id<"importedPresets">
+    name: string
+    type: PresetType
+  }
+>("presets/storage:storePreset")
 
 // Generate upload URL for preset file
 export const generateUploadUrl = mutation({
@@ -26,16 +64,7 @@ export const storePreset = mutation({
     userId: v.optional(v.string()),
     sessionId: v.optional(v.string()),
     storageId: v.id("_storage"),
-    presetType: v.union(
-      v.literal("openai"),
-      v.literal("textgen"),
-      v.literal("kobold"),
-      v.literal("novelai"),
-      v.literal("instruct"),
-      v.literal("context"),
-      v.literal("sysprompt"),
-      v.literal("reasoning")
-    ),
+    presetType: presetTypeValidator,
     name: v.string(),
   },
   handler: async (ctx, { userId, sessionId, storageId, presetType, name }) => {
@@ -341,7 +370,7 @@ export const getChatPreset = query({
 })
 
 // Create preset from template (for backward compatibility)
-export const createPreset = mutation({
+export const createPreset = action({
   args: {
     userId: v.optional(v.string()),
     sessionId: v.optional(v.string()),
@@ -349,9 +378,32 @@ export const createPreset = mutation({
     name: v.string(),
   },
   handler: async (ctx, { userId, sessionId, presetData, name }) => {
-    // This is a simplified version for template creation
-    // In the future, this could also use the file storage approach
-    throw new Error('Creating presets from templates is not yet supported with file storage. Please import a preset file instead.')
+    // Validate preset data and detect type
+    const validation = validatePreset(presetData)
+    if (!validation.isValid) {
+      throw new Error(`Invalid preset: ${validation.errors.join(', ')}`)
+    }
+
+    const presetType = (validation.detectedType || detectPresetType(presetData)) as PresetType | null
+    if (!presetType) {
+      throw new Error('Unable to detect preset type')
+    }
+
+    // Determine base name
+    const baseName = name || extractPresetName(presetData) || 'Untitled Preset'
+
+    // Serialize and store preset JSON in Convex storage
+    const json = JSON.stringify(presetData, null, 2)
+    const storageId = await ctx.storage.store(new Blob([json], { type: 'application/json' }))
+
+    // Reuse storePreset mutation to handle metadata persistence and unique naming
+    return await ctx.runMutation(storePresetMutation, {
+      userId,
+      sessionId,
+      storageId,
+      presetType,
+      name: baseName,
+    })
   },
 })
 

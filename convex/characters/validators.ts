@@ -51,11 +51,16 @@ export function validateCharacterCard(data: any): CharacterValidationResult {
  * Validates V1 character card structure
  */
 function validateCharacterCardV1(data: any, result: CharacterValidationResult): void {
-  const requiredFields = ['name', 'description', 'personality', 'scenario', 'first_mes', 'mes_example']
+  // Only require name for V1 - other fields can be missing and will get defaults
+  if (!data.name || typeof data.name !== 'string' || !data.name.trim()) {
+    result.errors.push('Character card is missing required field: name')
+  }
   
-  for (const field of requiredFields) {
-    if (!data[field] || typeof data[field] !== 'string') {
-      result.errors.push(`V1 character card is missing required field: ${field}`)
+  // Warn about missing recommended fields but don't error
+  const recommendedFields = ['description', 'personality', 'scenario', 'first_mes']
+  for (const field of recommendedFields) {
+    if (!data[field] || typeof data[field] !== 'string' || !data[field].trim()) {
+      result.warnings.push(`Character card is missing recommended field: ${field} (will use default)`)
     }
   }
   
@@ -89,22 +94,21 @@ function validateCharacterCardV1(data: any, result: CharacterValidationResult): 
  * Validates V2 character card structure
  */
 function validateCharacterCardV2(data: any, result: CharacterValidationResult): void {
-  // Validate spec fields
-  if (data.spec !== 'chara_card_v2') {
-    result.errors.push('Invalid spec field for V2 character card')
+  // Be more lenient with spec validation - warn instead of error
+  if (data.spec && data.spec !== 'chara_card_v2' && !data.spec.includes('chara_card')) {
+    result.warnings.push(`Unexpected spec field '${data.spec}' for V2 character card`)
   }
   
-  if (data.spec_version !== '2.0') {
-    result.errors.push('Invalid spec_version for V2 character card')
+  if (data.spec_version && data.spec_version !== '2.0') {
+    result.warnings.push(`Unexpected spec_version '${data.spec_version}' for V2 character card`)
   }
   
-  // Validate data object
-  if (!data.data || typeof data.data !== 'object') {
-    result.errors.push('V2 character card missing required data object')
+  // Try to find character data - could be in data object or at root
+  const cardData = data.data || data
+  if (!cardData || typeof cardData !== 'object') {
+    result.errors.push('Character card missing character data')
     return
   }
-  
-  const cardData = data.data
   
   // Only name is truly required for V2 cards - other fields can be empty
   const essentialFields = ['name']
@@ -112,14 +116,14 @@ function validateCharacterCardV2(data: any, result: CharacterValidationResult): 
   
   for (const field of essentialFields) {
     if (!cardData[field] || typeof cardData[field] !== 'string' || !cardData[field].trim()) {
-      result.errors.push(`V2 character card data is missing required field: ${field}`)
+      result.errors.push(`Character card is missing required field: ${field}`)
     }
   }
   
   // Check optional fields exist but allow empty strings
   for (const field of optionalFields) {
     if (cardData[field] !== undefined && typeof cardData[field] !== 'string') {
-      result.errors.push(`V2 character card field '${field}' must be a string if provided`)
+      result.errors.push(`Character card field '${field}' must be a string if provided`)
     }
   }
   
@@ -145,22 +149,21 @@ function validateCharacterCardV2(data: any, result: CharacterValidationResult): 
  * Validates V3 character card structure
  */
 function validateCharacterCardV3(data: any, result: CharacterValidationResult): void {
-  // Validate spec fields
-  if (data.spec !== 'chara_card_v3') {
-    result.errors.push('Invalid spec field for V3 character card')
+  // Be more lenient with spec validation - warn instead of error
+  if (data.spec && data.spec !== 'chara_card_v3' && !data.spec.includes('chara_card')) {
+    result.warnings.push(`Unexpected spec field '${data.spec}' for V3 character card`)
   }
   
-  if (data.spec_version !== '3.0') {
-    result.errors.push('Invalid spec_version for V3 character card')
+  if (data.spec_version && data.spec_version !== '3.0') {
+    result.warnings.push(`Unexpected spec_version '${data.spec_version}' for V3 character card`)
   }
   
-  // Validate data object
-  if (!data.data || typeof data.data !== 'object') {
-    result.errors.push('V3 character card missing required data object')
+  // Try to find character data - could be in data object or at root
+  const cardData = data.data || data
+  if (!cardData || typeof cardData !== 'object') {
+    result.errors.push('Character card missing character data')
     return
   }
-  
-  const cardData = data.data
   
   // Only name is truly required for V3 cards - other fields can be empty
   const essentialFields = ['name']
@@ -169,7 +172,7 @@ function validateCharacterCardV3(data: any, result: CharacterValidationResult): 
   for (const field of essentialFields) {
     const value = cardData[field] || data[field] // V3 allows fields in both locations
     if (!value || typeof value !== 'string' || !value.trim()) {
-      result.errors.push(`V3 character card is missing required field: ${field}`)
+      result.errors.push(`Character card is missing required field: ${field}`)
     }
   }
   
@@ -177,7 +180,7 @@ function validateCharacterCardV3(data: any, result: CharacterValidationResult): 
   for (const field of optionalFields) {
     const value = cardData[field] || data[field]
     if (value !== undefined && typeof value !== 'string') {
-      result.errors.push(`V3 character card field '${field}' must be a string if provided`)
+      result.errors.push(`Character card field '${field}' must be a string if provided`)
     }
   }
   

@@ -13,21 +13,47 @@ import {
 export function detectCharacterCardSpec(data: any): CharacterCardSpec | null {
   if (!data || typeof data !== 'object') return null
   
-  // Check for V3
+  // Check for V3 (exact match first)
   if (data.spec === 'chara_card_v3' && data.spec_version === '3.0') {
     return 'chara_card_v3'
   }
   
-  // Check for V2
+  // Check for V2 (exact match first)
   if (data.spec === 'chara_card_v2' && data.spec_version === '2.0') {
     return 'chara_card_v2'
   }
   
-  // Check for V1 (has required fields but no spec)
+  // Check for V3 with flexible spec versions
+  if (data.spec === 'chara_card_v3' || (data.spec && data.spec.includes('chara_card_v3'))) {
+    return 'chara_card_v3'
+  }
+  
+  // Check for V2 with flexible spec versions
+  if (data.spec === 'chara_card_v2' || (data.spec && data.spec.includes('chara_card_v2'))) {
+    return 'chara_card_v2'
+  }
+  
+  // Check for generic chara_card spec (default to V2 for compatibility)
+  if (data.spec && (data.spec === 'chara_card' || data.spec.includes('chara_card'))) {
+    return 'chara_card_v2'
+  }
+  
+  // Check for V1 (has required fields but no spec) - strict requirements
   if (data.name && data.description && data.personality && 
       data.scenario && data.first_mes && data.mes_example &&
       !data.spec) {
     return 'chara_card_v1'
+  }
+  
+  // Fallback: If it has basic character fields but doesn't match V1 exactly, treat as V1
+  if (!data.spec && data.name && (data.description || data.personality || data.first_mes)) {
+    return 'chara_card_v1'
+  }
+  
+  // If it has a data object with character fields, likely V2/V3 format
+  if (data.data && typeof data.data === 'object' && data.data.name) {
+    // Default to V2 if no spec is clearly indicated
+    return 'chara_card_v2'
   }
   
   return null
@@ -38,11 +64,11 @@ export function detectCharacterCardSpec(data: any): CharacterCardSpec | null {
  */
 export function parseCharacterCardV1(data: CharacterCardV1): ParsedCharacterCard {
   return {
-    name: data.name || '',
-    description: data.description || '',
-    personality: data.personality || '',
-    scenario: data.scenario || '',
-    firstMessage: data.first_mes || '',
+    name: data.name || 'Unnamed Character',
+    description: data.description || 'No description provided.',
+    personality: data.personality || 'No personality defined.',
+    scenario: data.scenario || 'No scenario defined.',
+    firstMessage: data.first_mes || 'Hello! How can I help you today?',
     messageExample: data.mes_example || '',
     creatorNotes: data.creatorcomment || '',
     systemPrompt: undefined,
@@ -68,23 +94,23 @@ export function parseCharacterCardV1(data: CharacterCardV1): ParsedCharacterCard
  * Parses V2 character card
  */
 export function parseCharacterCardV2(data: CharacterCardV2): ParsedCharacterCard {
-  const cardData = data.data
+  const cardData = data.data || data // Fallback to root if data is missing
   
   return {
-    name: cardData.name || '',
-    description: cardData.description || '',
-    personality: cardData.personality || '',
-    scenario: cardData.scenario || '',
-    firstMessage: cardData.first_mes || '',
+    name: cardData.name || 'Unnamed Character',
+    description: cardData.description || 'No description provided.',
+    personality: cardData.personality || 'No personality defined.',
+    scenario: cardData.scenario || 'No scenario defined.',
+    firstMessage: cardData.first_mes || 'Hello! How can I help you today?',
     messageExample: cardData.mes_example || '',
-    creatorNotes: cardData.creator_notes || '',
+    creatorNotes: cardData.creator_notes || (data as any).creatorcomment || '',
     systemPrompt: cardData.system_prompt || undefined,
     postHistoryInstructions: cardData.post_history_instructions || undefined,
     alternateGreetings: cardData.alternate_greetings || undefined,
-    tags: cardData.tags || [],
+    tags: Array.isArray(cardData.tags) ? cardData.tags : [],
     creator: cardData.creator || '',
     characterVersion: cardData.character_version || undefined,
-    avatar: undefined, // V2 doesn't embed avatar in JSON
+    avatar: (data as any).avatar && (data as any).avatar !== 'none' ? (data as any).avatar : undefined,
     spec: 'chara_card_v2',
     specVersion: '2.0',
     characterBook: cardData.character_book || undefined,

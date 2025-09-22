@@ -191,9 +191,9 @@ function AppShellContent({ children }: AppShellProps) {
       {/* Background moved to root layout for consistency */}
       
       {/* Global focus backdrop that persists across navigation */}
-      <div 
+      <div
         className={`fixed inset-0 pointer-events-none z-10 transition-opacity duration-[2000ms] ease-out ${
-          isBackdropMobile && (isStoryView || isChatView) ? 'bg-black/60' : 'bg-black/40'
+          isBackdropMobile && (isStoryView || isChatView) ? 'bg-black/40' : 'bg-black/25'
         }`}
         style={{ opacity: backdropOpacity }}
       />
@@ -209,7 +209,7 @@ function AppShellContent({ children }: AppShellProps) {
             <div className="pointer-events-none absolute top-1/2 -left-20 h-32 w-32 rounded-full bg-purple-500/25 blur-3xl" />
             
             {/* Background with glass effect */}
-            <div className="absolute inset-0 bg-stone-800/15 backdrop-blur-xl border-r border-white/20">
+            <div className="absolute inset-0 backdrop-blur-xl border-r border-white/20">
               {/* Subtle diagonal stroke pattern */}
               <div
                 className="
@@ -380,7 +380,7 @@ function AppShellContent({ children }: AppShellProps) {
             <div className="pointer-events-none absolute top-1/3 -right-20 h-28 w-28 rounded-full bg-cyan-500/25 blur-3xl" />
             
             {/* Background with glass effect */}
-            <div className="absolute inset-0 bg-stone-800/15 backdrop-blur-xl border-l border-white/20">
+            <div className="absolute inset-0 backdrop-blur-xl border-l border-white/20">
               {/* Subtle diagonal stroke pattern */}
               <div
                 className="

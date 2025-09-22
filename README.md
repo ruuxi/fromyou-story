@@ -116,7 +116,7 @@ From You is a comprehensive AI-powered storytelling platform that enables users 
 
    # Email & Communication (set these in Convex)
    RESEND_FROM_EMAIL=your_email@domain.com
-   NEXT_PUBLIC_APP_URL=https://yourdomain.com
+   NEXT_PUBLIC_SITE_URL=https://yourdomain.com
 
    # CORS & Security (set these in Convex)
    ALLOWED_ORIGIN=https://yourdomain.com

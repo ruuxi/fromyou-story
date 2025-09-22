@@ -24,6 +24,7 @@ import {
   Sparkles,
   X,
   Play,
+  Download,
   Globe,
   ChevronRight,
   Edit2,
@@ -509,6 +510,91 @@ export function RightSidebarMain() {
   if (selectedItem) {
     // Read cache for instant display while query hydrates
     const dataForView = selectedData || (cacheKey ? detailCache[cacheKey] : undefined)
+    const handleExportSelected = async () => {
+      try {
+        if (!selectedItem || !dataForView) return
+
+        const safeName = (dataForView.name || selectedItem.name || 'export').replace(/[^a-z0-9\-_. ]/gi, '_')
+
+        const downloadBlob = (blob: Blob, filename: string) => {
+          const url = URL.createObjectURL(blob)
+          const a = document.createElement('a')
+          a.href = url
+          a.download = filename
+          document.body.appendChild(a)
+          a.click()
+          a.remove()
+          URL.revokeObjectURL(url)
+        }
+
+        const downloadJson = (obj: any, filename: string) => {
+          const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' })
+          downloadBlob(blob, filename.endsWith('.json') ? filename : `${filename}.json`)
+        }
+
+        if (selectedItem.type === 'preset') {
+          if ((dataForView as any).dataUrl) {
+            const res = await fetch((dataForView as any).dataUrl)
+            const blob = await res.blob()
+            downloadBlob(blob, `${safeName}.json`)
+            return
+          }
+          if ((dataForView as any).originalData) {
+            downloadJson((dataForView as any).originalData, `${safeName}.json`)
+            return
+          }
+          alert('No preset data available to export.')
+          return
+        }
+
+        if (selectedItem.type === 'character') {
+          const original = (dataForView as any).originalData
+          if (original) {
+            downloadJson(original, `${safeName}.json`)
+            return
+          }
+          // Reconstruct a minimal SillyTavern V2 card if original missing
+          const card = {
+            spec: (dataForView as any).spec || 'chara_card_v2',
+            spec_version: (dataForView as any).specVersion || '2.0',
+            data: {
+              name: (dataForView as any).name || selectedItem.name,
+              description: (dataForView as any).description || '',
+              personality: (dataForView as any).personality || '',
+              scenario: (dataForView as any).scenario || '',
+              first_mes: (dataForView as any).firstMessage || '',
+              mes_example: (dataForView as any).messageExample || '',
+              creator_notes: (dataForView as any).creatorNotes || '',
+              system_prompt: (dataForView as any).systemPrompt || '',
+              post_history_instructions: (dataForView as any).postHistoryInstructions || '',
+              tags: (dataForView as any).tags || [],
+              character_book: (dataForView as any).characterBook || undefined,
+            }
+          }
+          downloadJson(card, `${safeName}.json`)
+          return
+        }
+
+        if (selectedItem.type === 'lorebook') {
+          const original = (dataForView as any).originalData
+          if (original) {
+            downloadJson(original, `${safeName}.json`)
+            return
+          }
+          const lore = {
+            entries: (dataForView as any).entries || {},
+            settings: (dataForView as any).settings || {},
+            format: (dataForView as any).format || 'sillytavern',
+            name: (dataForView as any).name || selectedItem.name,
+          }
+          downloadJson(lore, `${safeName}.json`)
+          return
+        }
+      } catch (err) {
+        console.error('Export failed:', err)
+        alert('Failed to export. Please try again.')
+      }
+    }
     return (
       <div className="relative w-full h-full flex flex-col">
         <style dangerouslySetInnerHTML={{
@@ -531,6 +617,16 @@ export function RightSidebarMain() {
             }
           `
         }} />
+        <div className="absolute top-2 right-2 z-10">
+          <button
+            onClick={handleExportSelected}
+            className="flex items-center gap-2 px-3 py-1.5 text-sm border border-white/20 text-white bg-gradient-to-br from-amber-900/35 via-sky-900/25 to-purple-900/20 shadow-sm hover:from-amber-900/45 hover:via-sky-900/35 hover:to-purple-900/30"
+            title="Export"
+          >
+            <Download className="w-4 h-4" />
+            Export
+          </button>
+        </div>
         
         <DetailView
           item={dataForView}

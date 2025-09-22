@@ -102,7 +102,7 @@ export function LeftSidebar({ isOpen = true, onClose, isMobile = false }: LeftSi
       {/* Mobile backdrop */}
       {isMobile && isOpen && (
         <div
-          className="fixed inset-0 bg-stone-950/50 backdrop-blur-sm z-40 md:hidden"
+          className="fixed inset-0 bg-stone-950/30 backdrop-blur-sm z-40 md:hidden"
           onClick={onClose}
         />
       )}
@@ -110,7 +110,7 @@ export function LeftSidebar({ isOpen = true, onClose, isMobile = false }: LeftSi
       {/* Sidebar */}
       <div
         className={`
-          ${isMobile ? "fixed inset-y-0 left-0 z-50 w-80 bg-stone-900/15 backdrop-blur-xl overflow-y-auto" : "relative w-full"}
+          ${isMobile ? "fixed inset-y-0 left-0 z-50 w-80 bg-stone-900/10 backdrop-blur-xl overflow-y-auto" : "relative w-full"}
           ${isMobile && !isOpen ? "-translate-x-full" : "translate-x-0"}
           transition-transform duration-300 ease-in-out
           flex flex-col h-full

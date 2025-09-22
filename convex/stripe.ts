@@ -154,7 +154,7 @@ export const generateCustomerPortalUrl = action({
     try {
       const session = await getStripe().billingPortal.sessions.create({
         customer: customer.stripeCustomerId,
-        return_url: `${process.env.NEXT_PUBLIC_APP_URL}`,
+        return_url: `${process.env.NEXT_PUBLIC_SITE_URL}`,
       });
 
       return { url: session.url };

@@ -42,3 +42,5 @@ yarn-error.log*
 Thumbs.db
 # clerk configuration (can include secrets)
 /.clerk/
+
+.env.local

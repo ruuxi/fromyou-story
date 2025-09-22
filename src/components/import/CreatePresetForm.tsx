@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useMutation } from 'convex/react'
+import { useAction } from 'convex/react'
 import { api } from '../../../convex/_generated/api'
 import { useAuthState } from '@/hooks/useAuthState'
 import { 
@@ -55,7 +55,7 @@ export function CreatePresetForm({ onSuccess, onBack }: CreatePresetFormProps) {
     PRESET_TEMPLATES[0].data
   )
 
-  const createPreset = useMutation(api.presets.storage.createPreset)
+  const createPreset = useAction(api.presets.storage.createPreset)
 
   const handleCreate = async () => {
     if (!authArgs) return
